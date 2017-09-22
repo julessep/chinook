@@ -40,10 +40,31 @@ SELECT InvoiceId, count(*) AS ItemsPerInvoice
 FROM InvoiceLine
 GROUP BY InvoiceId
 -- 11. Provide a query that includes the track name with each invoice line item.
+SELECT il.InvoiceLineId,  t.Name
+FROM InvoiceLine il, Track t
+WHERE il.TrackId = t.TrackId
 -- 12. Provide a query that includes the purchased track name AND artist name with each invoice line item.
--- 13. Provide a query that shows the # of invoices per country. HINT: [GROUP BY](http://www.sqlite.org/lang_select.html#resultset)
+SELECT il.InvoiceLineId, t.Name AS TrackName, a.Name AS ArtistName
+FROM Track t, InvoiceLine il, Artist a, Album al
+WHERE t.TrackId = il.TrackId
+AND al.ArtistId = a.ArtistId
+AND il.TrackId = t.TrackId
+-- 13. Provide a query that shows the # of invoices per country.
+SELECT COUNT(*) AS InvoiceTotal, BillingCountry
+FROM Invoice
+GROUP BY BillingCountry
+
 -- 14. Provide a query that shows the total number of tracks in each playlist. The Playlist name should be included on the resultant table.
+SELECT COUNT(pt.PlaylistId) AS TotalTracks, p.name
+FROM Playlist p, PlaylistTrack pt
+WHERE p.PlaylistId = pt.PlaylistId
+GROUP BY p.PlaylistId
 -- 15. Provide a query that shows all the Tracks, but displays no IDs. The resultant table should include the Album name, Media type and Genre.
+SELECT a.Title AS AlbumName, g.Name AS Genre,  mt.Name As MediaType
+FROM Album a, Genre g, MediaType mt, Track t
+WHERE a.AlbumId = t.AlbumId
+AND g.GenreId = t.GenreId
+AND mt.MediaTypeId = t.MediaTypeId
 -- 16. Provide a query that shows all Invoices but includes the # of invoice line items.
 -- 17. Provide a query that shows total sales made by each sales agent.
 -- 18. Which sales agent made the most in sales in 2009?
