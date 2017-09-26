@@ -66,8 +66,24 @@ WHERE a.AlbumId = t.AlbumId
 AND g.GenreId = t.GenreId
 AND mt.MediaTypeId = t.MediaTypeId
 -- 16. Provide a query that shows all Invoices but includes the # of invoice line items.
+SELECT COUNT(il.InvoiceId) AS InvoiceLineTotal, i.*
+FROM Invoice i, InvoiceLine il
+Where i.invoiceId = il.invoiceId
+GROUP BY il.InvoiceId
 -- 17. Provide a query that shows total sales made by each sales agent.
+SELECT e.EmployeeId AS SalesAgentId, round(SUM(i.Total)) AS TotalSales
+FROM Employee e, Invoice i, Customer c
+WHERE e.EmployeeId = c.SupportRepId
+AND c.CustomerId = i.CustomerId
+GROUP BY e.EmployeeId
 -- 18. Which sales agent made the most in sales in 2009?
+SELECT MostSales2009, MAX(TotalSales) AS TotalSales
+FROM
+(SELECT e.FirstName || ' ' || e.LastName AS MostSales2009, round(SUM(i.Total)) AS TotalSales
+FROM Employee e, Invoice i, Customer c
+WHERE e.EmployeeId = c.SupportRepId
+AND c.CustomerId = i.CustomerId
+AND i.InvoiceDate LIKE ('2009%'))
 -- 19. Which sales agent made the most in sales in 2010?
 -- 20. Which sales agent made the most in sales over all?
 -- 21. Provide a query that shows the # of customers assigned to each sales agent.
